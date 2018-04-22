@@ -10,7 +10,7 @@ public class WordSalad implements Iterable<String> {
 
     private WordNode first;
     private WordNode last;
-     
+
     public WordSalad() {
         this.first = null;
         this.last = null;
@@ -39,40 +39,40 @@ public class WordSalad implements Iterable<String> {
         }
         WordNode newLast = new WordNode(word, null);
         this.last.next = newLast;
-        this.last = newLast; 
+        this.last = newLast;
     }
-  
+
     private class WordNode {
         private String word;
         private WordNode next;
-                
+
         private WordNode(String word, WordNode next) {
             this.word = word;
             this.next = next;
         }
-        
+
     }
-  
+
     public java.util.Iterator<String> iterator() {
         return new java.util.Iterator<String>() {
             private WordNode current = first;
-      
+
             public boolean hasNext() {
                 return current != null;
             }
-      
+
             public String next() {
                 String result = current.word;
                 current = current.next;
                 return result;
             }
-      
+
             public void remove() {
                 throw new UnsupportedOperationException();
             }
         };
     }
-                
+
     public String toString() {
         StringBuilder result = new StringBuilder("[");
         WordNode node = first;
@@ -87,23 +87,40 @@ public class WordSalad implements Iterable<String> {
 
     // Method stubs to be completed for the assignment.
     // See the assignment description for specification of their behaviour.
-        
+
+   /**
+    * Puts the first word in first block, 2nd in 2nd block, kth word in kth block,
+    * wrap around blocks
+    * like when dealing out cards
+    *
+    * @param k The number of blocks to distribute into
+    * @return an array of WordSalads
+    */
     public WordSalad[] distribute(int k) {
-        return null;
+        // make use of modulo operator to determine which group to put a word in
+        // remember that WordSalads are linked lists of Strings with add() and addLast() methods
+        WordSalad[] distribution = new WordSalad[k];
+        int wordCount = 0;
+        for(word : this){
+            distribution[wordCount%k].addLast(word);
+            wordCount++;
+        }
+        return distribution;
     }
-        
+
+    
     public WordSalad[] chop(int k) {
         return null;
     }
-        
+
     public WordSalad[] split(int k) {
         return null;
     }
-        
+
     public static WordSalad merge(WordSalad[] blocks) {
         return null;
     }
-        
+
     public static WordSalad join(WordSalad[] blocks) {
         return null;
     }
