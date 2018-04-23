@@ -101,14 +101,18 @@ public class WordSalad implements Iterable<String> {
         // remember that WordSalads are linked lists of Strings with add() and addLast() methods
         WordSalad[] distribution = new WordSalad[k];
         int wordCount = 0;
-        for(word : this){
-            distribution[wordCount%k].addLast(word);
+        int currIndex;
+        for(int i = 0; i < k; i++){
+            distribution[i] = new WordSalad();
+        }
+        for(String word : this){
+            currIndex = wordCount%k;
+            distribution[currIndex].addLast(word);
             wordCount++;
         }
         return distribution;
     }
 
-    
     public WordSalad[] chop(int k) {
         return null;
     }
