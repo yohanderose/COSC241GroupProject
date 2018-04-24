@@ -1,5 +1,6 @@
 /* File: WordSalad.java - April 2018 */
 package week09;
+import java.util.Arrays;
 
 /**
  *  Skeleton implementation of the WordSalad class.
@@ -118,7 +119,31 @@ public class WordSalad implements Iterable<String> {
     }
 
     public WordSalad[] split(int k) {
-        return null;
+        // we want to distribute the word salad, then merge the remainder, then repeat the distribute until we've run out of words
+        // challenge here is to do with length as we can't know how big it will be initially
+        // We do know that, if successful, it will be larger than previous by 1.
+        WordSalad[] currPass;
+        WordSalad[] lastPass;
+        WordSalad[] finalPass = new WordSalad[0];
+        WordSalad saladLeft = this;
+        int finalLength = 0;
+        boolean splitting = true;
+        while(splitting){
+            lastPass = finalPass;
+            currPass = saladLeft.distribute(k);
+            saladLeft = merge(Arrays.copyOfRange(currPass, 1, currPass.length));
+            if(saladLeft.first == null){
+                splitting = false;
+            }
+
+            finalPass = new WordSalad[lastPass.length + 1];
+            for(int i = 0; i < lastPass.length; i++){
+                finalPass[i] = lastPass[i];
+            }
+
+            finalPass[lastPass.length] = currPass[0];
+        }
+        return finalPass;
     }
 
     public static WordSalad merge(WordSalad[] blocks) {
