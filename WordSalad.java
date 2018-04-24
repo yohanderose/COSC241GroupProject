@@ -115,7 +115,52 @@ public class WordSalad implements Iterable<String> {
     }
 
     public WordSalad[] chop(int k) {
-        return null;
+				/*Probably a way shorter way to do this but it works, lets discuss tmrw (24.04.18)*/
+        //establish lengths of each WordSalad item
+        ArrayList<Integer> lengths = new ArrayList<>();
+        Iterator pointer = this.iterator();
+        int count = 0;
+
+        while (pointer.hasNext()) {
+            pointer.next();             //remember to move iterator along
+            count++;
+        }
+        int x = count / k;
+        int r = count % k;
+
+        for (int i = 0; i < k - r; i++) {
+            lengths.add(x);                    //add x (k-r) times
+        }                                      //while sum != words: add (count%sum)/r, r--
+
+        int sum = 0;
+        for (int i : lengths) {
+            sum += i;
+        }
+
+        while (sum != count) {
+            lengths.add(0, (count % sum) / r);
+            r--; //might be r/2
+            sum = 0;
+            for (int i : lengths) {
+                sum += i;
+            }
+        }
+
+        //construct WordSalad array with reference to lengths
+        WordSalad[] result = new WordSalad[k];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = new WordSalad();
+        }
+
+        pointer = this.iterator();
+        for (int i = 0; i < lengths.size(); i++) {
+            int saladSize = 0;
+            while (saladSize < lengths.get(i)) {
+                result[i].addLast(pointer.next().toString());
+                saladSize++;
+            }
+        }
+        return result;
     }
 
     public WordSalad[] split(int k) {
