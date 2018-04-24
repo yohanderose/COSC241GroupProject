@@ -122,11 +122,22 @@ public class WordSalad implements Iterable<String> {
     }
 
     public static WordSalad merge(WordSalad[] blocks) {
-        return null;
+        // The opposite of distribute
+        WordSalad merged = new WordSalad();
+        // int currIndex = 0;
+        return merged;
     }
 
     public static WordSalad join(WordSalad[] blocks) {
-        return null;
+        // The opposite of Chop
+        WordSalad joined = new WordSalad();
+        for(WordSalad salad : blocks){
+            for(String word : salad){
+                joined.addLast(word);
+            }
+        }
+
+        return joined;
     }
 
     public static WordSalad recombine(WordSalad[] blocks, int k) {
