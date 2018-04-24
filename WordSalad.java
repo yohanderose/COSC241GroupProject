@@ -124,7 +124,21 @@ public class WordSalad implements Iterable<String> {
     public static WordSalad merge(WordSalad[] blocks) {
         // The opposite of distribute
         WordSalad merged = new WordSalad();
-        // int currIndex = 0;
+        WordNode[] mergeNodes = new WordNode[blocks.length];
+        for(int i = 0; i < blocks.length; i++){
+            mergeNodes[i] = blocks[i].first;
+        }
+        boolean merging  = true;
+        while(merging){
+            for(int i = 0; i < mergeNodes.length; i++){
+                if(mergeNodes[i] == null){
+                    merging = false;
+                }else{
+                    merged.addLast(mergeNodes[i].word);
+                    mergeNodes[i] = mergeNodes[i].next;
+                }
+            }
+        }
         return merged;
     }
 
