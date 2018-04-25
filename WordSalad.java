@@ -180,7 +180,31 @@ public class WordSalad implements Iterable<String> {
     }
 
     public static WordSalad recombine(WordSalad[] blocks, int k) {
-        return null;
+        // opposite of split... so... do split in reverse?
+        WordSalad[] curToMerge = new WordSalad[1];
+        WordSalad[] lastDist;
+        WordSalad recombination = new WordSalad();
+        int dists = 0;
+        boolean recombining = true;
+        while(recombining){
+            if(recombination.first != null){
+                lastDist = recombination.distribute(k-1);
+                curToMerge = new WordSalad[lastDist.length + 1];
+                curToMerge[1] = lastDist[0];
+                if(lastDist.length == 2){
+                    curToMerge[2] = lastDist[1];
+                }
+            }
+            dists++;
+            if(dists <= blocks.length){
+                recombining = false;
+            }
+            curToMerge[0] = blocks[blocks.length-dists]
+            recombination = merge(curToMerge);
+        }
+
+
+        return recombination;
     }
 
 }
