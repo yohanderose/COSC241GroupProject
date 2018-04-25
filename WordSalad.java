@@ -127,8 +127,9 @@ public class WordSalad implements Iterable<String> {
         int x = count / k;
         int r = count % k;
 
-        for (int i = 0; i < k - r; i++) { lengths.add(x); //add x
-            (k-r) times } //while sum != words: add (count%sum)/r, r--
+        for (int i = 0; i < k - r; i++) {
+            lengths.add(x); //add x (k-r) times
+        } //while sum != words: add (count%sum)/r, r--
 
         int sum = 0;
         for (int i : lengths) {
