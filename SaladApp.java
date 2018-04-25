@@ -36,7 +36,7 @@ public class SaladApp {
     public static void main(String[] args) {
         SaladApp app = new SaladApp();
         app.load("words.txt");
-        System.err.println(app.info());
+        //System.err.println(app.info());
         Scanner input = new Scanner(System.in);
         while (input.hasNextLine()) {
             app.handleLine(input.nextLine());
@@ -76,7 +76,7 @@ public class SaladApp {
      *  Load FILE    - loads the contents of FILE into the single WS
      *  Write FILE   - writes the contents of the single WS to FILE
      * </pre>
-     * 
+     *
      *  Note: No error checking is done, so for example calling chop,
      *  distribute, or split when the single WordSalad is null will
      *  cause an exception.
