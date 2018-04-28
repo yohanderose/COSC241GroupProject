@@ -152,6 +152,7 @@ public class WordSalad implements Iterable<String> {
         for (int i = 0; i < result.length; i++) {
             result[i] = new WordSalad();
         }
+        
 
         pointer = this.iterator();
         for (int i = 0; i < lengths.size(); i++) {
