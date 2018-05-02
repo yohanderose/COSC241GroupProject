@@ -152,7 +152,6 @@ public class WordSalad implements Iterable<String> {
         for (int i = 0; i < result.length; i++) {
             result[i] = new WordSalad();
         }
-        
 
         pointer = this.iterator();
         for (int i = 0; i < lengths.size(); i++) {
@@ -165,10 +164,15 @@ public class WordSalad implements Iterable<String> {
         return result;
     }
 
+   /**
+    * Splits the WordSalad into an array of WordSalad objects by:
+    * 1. Distributing into k chunks.
+    * 2. Merging all of these chunks back together, save for the first.
+    * 3. Repeating until there is no more WordSalad to Split.
+    *
+    * @param k - the number of chunks for the distribute calls
+    */
     public WordSalad[] split(int k) {
-        // we want to distribute the word salad, then merge the remainder, then repeat the distribute until we've run out of words
-        // challenge here is to do with length as we can't know how big it will be initially
-        // We do know that, if successful, it will be larger than previous by 1.
         WordSalad[] currPass;
         WordSalad[] lastPass;
         WordSalad[] finalPass = new WordSalad[0];
@@ -226,8 +230,19 @@ public class WordSalad implements Iterable<String> {
         return joined;
     }
 
+   /**
+    * Takes an array of WordSalads that have been jumbled by way of split()
+    * and unjumbles them.
+    * It does this by performing the operations of split in reverse:
+    * 1. Merge the last jumbled salad with the current Salad to be returned.
+    * 2. Distribute the current Salad to be returned with k-1.
+    * 3. Repeat until you run out of jumbled Salad.
+    *
+    * @param blocks - The array of jumbled WordSalad Objects.
+    * @param k - The distribution parameter.
+    * @return WordSalad - The final recombined WordSalad.
+    */
     public static WordSalad recombine(WordSalad[] blocks, int k) {
-        // opposite of split... so... do split in reverse?
         WordSalad[] curToMerge = new WordSalad[1];
         WordSalad[] lastDist;
         WordSalad recombination = new WordSalad();
@@ -240,10 +255,6 @@ public class WordSalad implements Iterable<String> {
                 for(int i = 0; i < (curToMerge.length - 1); i++){
                     curToMerge[i+1] = lastDist[i];
                 }
-
-                if(lastDist.length == 2){
-                    curToMerge[2] = lastDist[1];
-                }
             }
             dists++;
             if(dists >= blocks.length){
@@ -252,7 +263,6 @@ public class WordSalad implements Iterable<String> {
             curToMerge[0] = blocks[blocks.length-dists];
             recombination = merge(curToMerge);
         }
-
 
         return recombination;
     }
