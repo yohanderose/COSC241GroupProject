@@ -1,30 +1,46 @@
 /* File: WordSalad.java - April 2018 */
-package week09;
+
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.ArrayList;
 
 /**
- *  Skeleton implementation of the WordSalad class.
+ * Skeleton implementation of the WordSalad class.
  *
- *  @author Michael Albert
+ * @author Quinn Thorsnes, Kelson Sadlier, Yohan de Rose
  */
 public class WordSalad implements Iterable<String> {
 
+    /**
+     * Allows WordSalad to know what WordNode comes first in the LinkedList.
+     */
     private WordNode first;
+    /**
+     * Allows WordSalad to know what WordNode comes last in the LinkedList.
+     */
     private WordNode last;
 
+    /**
+     * Constructs an empty WordSalad object.
+     */
     public WordSalad() {
         this.first = null;
         this.last = null;
     }
 
+    /**
+     * Constructs WordSalad object from String List object.
+     * @param words a list of strings
+     */
     public WordSalad(java.util.List<String> words) {
         for (String word : words) {
             addLast(word);
         }
     }
 
+    /**
+     * @param word
+     */
     public void add(String word) {
         if (this.first == null) {
             this.first = new WordNode(word, null);
@@ -35,6 +51,9 @@ public class WordSalad implements Iterable<String> {
         this.first = newFirst;
     }
 
+    /**
+     * @param word
+     */
     public void addLast(String word) {
         if (this.first == null) {
             add(word);
@@ -45,6 +64,9 @@ public class WordSalad implements Iterable<String> {
         this.last = newLast;
     }
 
+    /**
+     *
+     */
     private class WordNode {
         private String word;
         private WordNode next;
@@ -56,6 +78,9 @@ public class WordSalad implements Iterable<String> {
 
     }
 
+    /**
+     * @return
+     */
     public java.util.Iterator<String> iterator() {
         return new java.util.Iterator<String>() {
             private WordNode current = first;
@@ -76,6 +101,9 @@ public class WordSalad implements Iterable<String> {
         };
     }
 
+    /**
+     * @return
+     */
     public String toString() {
         StringBuilder result = new StringBuilder("[");
         WordNode node = first;
@@ -91,31 +119,38 @@ public class WordSalad implements Iterable<String> {
     // Method stubs to be completed for the assignment.
     // See the assignment description for specification of their behaviour.
 
-   /**
-    * Puts the first word in first block, 2nd in 2nd block, kth word in kth block,
-    * wrap around blocks
-    * like when dealing out cards
-    *
-    * @param k The number of blocks to distribute into
-    * @return an array of WordSalads
-    */
+    /**
+     * Puts the first word in first block, 2nd in 2nd block, kth word in kth block,
+     * wrap around blocks
+     * like when dealing out cards
+     *
+     * @param k The number of blocks to distribute into
+     * @return an array of WordSalads
+     */
     public WordSalad[] distribute(int k) {
         // make use of modulo operator to determine which group to put a word in
         // remember that WordSalads are linked lists of Strings with add() and addLast() methods
         WordSalad[] distribution = new WordSalad[k];
         int wordCount = 0;
         int currIndex;
-        for(int i = 0; i < k; i++){
+        for (int i = 0; i < k; i++) {
             distribution[i] = new WordSalad();
         }
-        for(String word : this){
-            currIndex = wordCount%k;
+        for (String word : this) {
+            currIndex = wordCount % k;
             distribution[currIndex].addLast(word);
             wordCount++;
         }
         return distribution;
     }
 
+    /**
+     * This method divides the count of words in this into almost equal blocks and  populates an ArrayList with these values.
+     * This is then used as the lengths for corresponding WordSalad objects in another array.
+     * From the start of the original WordSalad object we fill each WordSalad block until its corresponding length is met, and continue until the whole array is full.
+     * @param k used to divide original length into almost equal lengths
+     * @return an array of WordSalad objects chopped into k pieces
+     */
     public WordSalad[] chop(int k) {
         //establish lengths of each WordSalad item
         ArrayList<Integer> lengths = new ArrayList<>();
@@ -130,8 +165,8 @@ public class WordSalad implements Iterable<String> {
         int r = count % k;
 
         for (int i = 0; i < k - r; i++) {
-            lengths.add(x); //add x (k-r) times
-        } //while sum != words: add (count%sum)/r, r--
+            lengths.add(x);       //add x (k-r) times
+        }                     //while sum != words: add (count%sum)/r, r--
 
         int sum = 0;
         for (int i : lengths) {
@@ -157,21 +192,19 @@ public class WordSalad implements Iterable<String> {
         for (int i = 0; i < lengths.size(); i++) {
             int saladSize = 0;
             while (saladSize < lengths.get(i)) {
-                result[i].addLast(pointer.next().toString());
+                result[i].addLast(pointer.next());
                 saladSize++;
             }
         }
         return result;
     }
 
-   /**
-    * Splits the WordSalad into an array of WordSalad objects by:
-    * 1. Distributing into k chunks.
-    * 2. Merging all of these chunks back together, save for the first.
-    * 3. Repeating until there is no more WordSalad to Split.
-    *
-    * @param k - the number of chunks for the distribute calls
-    */
+    /**
+     * This method distributes the WordSalad object and keeps the first element of this result, merging the remaining elements so the words are ordered.
+     * Then the distribute is called on these remaining, first element is kept, remainder ordered and so on until the original object is empty.
+     * @param k count that each distribute call is passed
+     * @return returns an array of WordSalad objects that are split
+     */
     public WordSalad[] split(int k) {
         WordSalad[] currPass;
         WordSalad[] lastPass;
@@ -179,16 +212,16 @@ public class WordSalad implements Iterable<String> {
         WordSalad saladLeft = this;
         int finalLength = 0;
         boolean splitting = true;
-        while(splitting){
+        while (splitting) {
             lastPass = finalPass;
             currPass = saladLeft.distribute(k);
             saladLeft = merge(Arrays.copyOfRange(currPass, 1, currPass.length));
-            if(saladLeft.first == null){
+            if (saladLeft.first == null) {
                 splitting = false;
             }
 
             finalPass = new WordSalad[lastPass.length + 1];
-            for(int i = 0; i < lastPass.length; i++){
+            for (int i = 0; i < lastPass.length; i++) {
                 finalPass[i] = lastPass[i];
             }
 
@@ -197,19 +230,23 @@ public class WordSalad implements Iterable<String> {
         return finalPass;
     }
 
+    /**
+     * @param blocks
+     * @return
+     */
     public static WordSalad merge(WordSalad[] blocks) {
         // The opposite of distribute
         WordSalad merged = new WordSalad();
         WordNode[] mergeNodes = new WordNode[blocks.length];
-        for(int i = 0; i < blocks.length; i++){
+        for (int i = 0; i < blocks.length; i++) {
             mergeNodes[i] = blocks[i].first;
         }
-        boolean merging  = true;
-        while(merging){
-            for(int i = 0; i < mergeNodes.length; i++){
-                if(mergeNodes[i] == null){
+        boolean merging = true;
+        while (merging) {
+            for (int i = 0; i < mergeNodes.length; i++) {
+                if (mergeNodes[i] == null) {
                     merging = false;
-                }else{
+                } else {
                     merged.addLast(mergeNodes[i].word);
                     mergeNodes[i] = mergeNodes[i].next;
                 }
@@ -218,11 +255,15 @@ public class WordSalad implements Iterable<String> {
         return merged;
     }
 
+    /**
+     * @param blocks
+     * @return
+     */
     public static WordSalad join(WordSalad[] blocks) {
         // The opposite of Chop
         WordSalad joined = new WordSalad();
-        for(WordSalad salad : blocks){
-            for(String word : salad){
+        for (WordSalad salad : blocks) {
+            for (String word : salad) {
                 joined.addLast(word);
             }
         }
@@ -230,39 +271,38 @@ public class WordSalad implements Iterable<String> {
         return joined;
     }
 
-   /**
-    * Takes an array of WordSalads that have been jumbled by way of split()
-    * and unjumbles them.
-    * It does this by performing the operations of split in reverse:
-    * 1. Merge the last jumbled salad with the current Salad to be returned.
-    * 2. Distribute the current Salad to be returned with k-1.
-    * 3. Repeat until you run out of jumbled Salad.
-    *
-    * @param blocks - The array of jumbled WordSalad Objects.
-    * @param k - The distribution parameter.
-    * @return WordSalad - The final recombined WordSalad.
-    */
+    /**
+     * @param blocks
+     * @param k
+     * @return
+     */
     public static WordSalad recombine(WordSalad[] blocks, int k) {
+        // opposite of split... so... do split in reverse?
         WordSalad[] curToMerge = new WordSalad[1];
         WordSalad[] lastDist;
         WordSalad recombination = new WordSalad();
         int dists = 0;
         boolean recombining = true;
-        while(recombining){
-            if(recombination.first != null){
-                lastDist = recombination.distribute(k-1);
+        while (recombining) {
+            if (recombination.first != null) {
+                lastDist = recombination.distribute(k - 1);
                 curToMerge = new WordSalad[lastDist.length + 1];
-                for(int i = 0; i < (curToMerge.length - 1); i++){
-                    curToMerge[i+1] = lastDist[i];
+                for (int i = 0; i < (curToMerge.length - 1); i++) {
+                    curToMerge[i + 1] = lastDist[i];
+                }
+
+                if (lastDist.length == 2) {
+                    curToMerge[2] = lastDist[1];
                 }
             }
             dists++;
-            if(dists >= blocks.length){
+            if (dists >= blocks.length) {
                 recombining = false;
             }
-            curToMerge[0] = blocks[blocks.length-dists];
+            curToMerge[0] = blocks[blocks.length - dists];
             recombination = merge(curToMerge);
         }
+
 
         return recombination;
     }
